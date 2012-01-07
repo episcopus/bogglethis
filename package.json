@@ -1,0 +1,11 @@
+{
+    "name": "scramblecheat"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "underscore": "1.1.7"
+  }
+  , "devDependencies": {
+      "vows": "0.5.8"
+  }
+}
