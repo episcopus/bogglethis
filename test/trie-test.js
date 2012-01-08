@@ -15,22 +15,22 @@ vows.describe('Trie Test').addBatch({
         'when adding a word to the Trie': {
             topic: function(trie) {
                 trie.add("hello");
-                return true;
+                return trie;
             },
             'we can query the word back': function(topic) {
-                var result = trie.query("hello");
+                var result = topic.query("hello");
                 assert.isNotNull(result);
             },
             'we don\'t find words that aren\'t there': function(topic) {
-                var result = trie.query("hey");
+                var result = topic.query("hey");
                 assert.isNull(result);
             },
             'we don\'t find subset words': function(topic) {
-                var result = trie.query("he");
+                var result = topic.query("he");
                 assert.isNull(result);
             },
             'we don\'t find superset words': function(topic) {
-                var result = trie.query("hellos");
+                var result = topic.query("hellos");
                 assert.isNull(result);
             }
         }
