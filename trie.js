@@ -1,29 +1,29 @@
 var fs = require('fs');
 var _ = require('underscore');
+var path = require('path');
 
 var Trie = module.exports = function Trie(dictionaryFile) {
     // this.root = new TrieNode();
     this.root = {};
-    
+    if (!dictionaryFile) {
+        return;
+    }
+
     fs.readFile(dictionaryFile, "utf8", function(error, data) {
         if (error) {
             throw error;
         }
-
-        console.log(data);
-
+        // console.log(data);
         var lines = data.split("\n");
         _(lines).each(function(line) {
-            // console.log(line);
-            
         });
     });
 }
 
-Trie.prototype.Add = function Add(word) {
+Trie.prototype.add = function add(word) {
 };
 
-Trie.prototype.Query = function Query(word) {
+Trie.prototype.query = function query(word) {
 };
 
 
@@ -31,12 +31,12 @@ var TrieNode = function TrieNode() {
     this.children = {};
 };
 
-TrieNode.prototype.AddChild = function AddChild(char) {
+TrieNode.prototype.addChild = function addChild(char) {
 };
 
-TrieNode.prototype.GetChild = function GetChild(char) {
+TrieNode.prototype.getChild = function getChild(char) {
 };
 
 if (!module.parent) {
-    var trie = new Trie("/Users/sasselin/Projects/Coding Problems/SimpleProblemsCSharp/SimpleProblemsCSharp/Resources/corncob_lowercase.txt");
+    var trie = new Trie(path.join(__dirname, "corncob_lowercase.txt"));
 }
