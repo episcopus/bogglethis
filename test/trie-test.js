@@ -37,11 +37,20 @@ vows.describe('Trie Test').addBatch({
     },
     'when intializing a full Trie': {
         topic: function() {
-            var trie = new Trie(path.resolve(__dirname, "../corncob_lowercase.txt"));
-            return trie;
+            var trie = new Trie();
+            trie.init(path.resolve(__dirname, "../corncob_lowercase.txt"), this.callback);
         },
-        'we get a valid instance': function(topic) {
-            assert.isNotNull(topic);
+        'we get a valid instance': function(error, trie) {
+            assert.isNull(error);
+            assert.isNotNull(trie);
+        },
+        'we can query valid words': function(error, trie) {
+            var result = trie.query("hello");
+            assert.isNotNull(result);
+        },
+        'we don\'t find words that aren\'t there': function(error, trie) {
+            var result = trie.query("ducko");
+            assert.isNull(result);
         }
     }
 }).export(module);
