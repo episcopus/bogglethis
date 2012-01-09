@@ -59,7 +59,6 @@ Trie.prototype.query = function query(word) {
     return ret;
 };
 
-
 var TrieNode = function TrieNode() {
     this.children = {};
 };
