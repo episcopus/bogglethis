@@ -19,13 +19,42 @@ var deltas = [
     { x : 1, y : 1 }
 ];
 
+var values = {
+    a : 1,
+    b : 4,
+    c : 4, 
+    d : 2,
+    e : 1,
+    f : 4,
+    g : 3,
+    h : 3,
+    i : 1,
+    j : 10,
+    k : 5,
+    l : 2,
+    m : 4,
+    n : 2,
+    o : 1,
+    p : 4,
+    q : 10,
+    r : 1,
+    s : 1,
+    t : 1,
+    u : 2,
+    w : 4,
+    x : 8,
+    y : 3,
+    z : 10
+};
+
 var copyObj = function copyObj(item) {
     var newOne = {
         x : item.x,
         y : item.y,
         node : item.node,
         grid : [],
-        str : item.str
+        str : item.str,
+        val : item.val
     };
 
     var newGrid = [];
@@ -63,7 +92,8 @@ var getInitPos = function getInitPos(trie) {
         y : 0,
         node : trie.root,
         grid : undefined,
-        str : ""
+        str : "",
+        val : 0
     };
 
     var blankGrid = [];
@@ -105,6 +135,7 @@ Cheat.prototype.process = function process(grid, cb) {
                 newPos.str = grid[ySize][xSize];
                 newPos.node = cur.node.getChild(newPos.str);
                 newPos.grid[ySize][xSize] = 1;
+                newPos.val = values[grid[ySize][xSize]];
                 q.enqueue(newPos);
             }
         }
@@ -115,7 +146,7 @@ Cheat.prototype.process = function process(grid, cb) {
             cur = q.dequeue();
             // console.log("now looking at:", cur);
             if (cur.node.getChild('\0') && cur.str.length > 2) {
-                words.push(cur.str);
+                words.push( { word : cur.str, val : cur.val } );
             }
 
             for (var i=0, len=deltas.length; i<len; i++) {
@@ -143,13 +174,14 @@ Cheat.prototype.process = function process(grid, cb) {
                 newOne.str = newOne.str + letter;
                 newOne.grid[newOne.y][newOne.x] = 1;
                 newOne.node = newOne.node.getChild(letter);
+                newOne.val = newOne.val + values[letter];
                 q.enqueue(newOne);                
                 // console.log("enqueuing this:", newOne);
             }
          }
         
         words = words.sort(function(a, b) {
-            return b.length - a.length;
+            return b.val - a.val;
         });
         cb(null, words);
     });
@@ -169,7 +201,7 @@ if (!module.parent) {
         }
         console.log("Here are the generated words (" + results.length + "):");
         for (var i=0, len=results.length; i<len; i++) {
-            console.log("\t" + results[i]);
+            console.log("\t" + results[i].word + " (" + results[i].val + ")");
         }
     });
 }
