@@ -41,6 +41,44 @@ var copyObj = function copyObj(item) {
     return newOne;
 };
 
+var initGrid = function initGrid(grid) {
+    // Turn grid in multi-dimensional array for further processing.
+    GRIDSIZE = Math.sqrt(grid.length);
+    var newGrid = [];
+    for (var y=0; y<GRIDSIZE; y++) {
+        var row = [];
+        for (var x=0; x<GRIDSIZE; x++) {
+            row.push(grid[y * GRIDSIZE + x]);
+        }
+        newGrid.push(row);
+    }
+    // console.log("new grid:", newGrid);
+    return newGrid;
+}
+
+var getInitPos = function getInitPos(trie) {
+    // console.log("Implement core logic here.");
+    var cur = { 
+        x : 0,
+        y : 0,
+        node : trie.root,
+        grid : undefined,
+        str : ""
+    };
+
+    var blankGrid = [];
+    for (var y=0; y<GRIDSIZE; y++) {
+        var row = [];
+        for (var x=0; x<GRIDSIZE; x++) {
+            row.push(0);
+        }
+        blankGrid.push(row);
+    }
+    cur.grid = blankGrid;
+
+    return cur;
+}
+
 var isSquare = function isSquare(num) {
     return Math.sqrt(num) - Math.floor(Math.sqrt(num)) == 0;
 };
@@ -52,45 +90,13 @@ Cheat.prototype.process = function process(grid, cb) {
             return;
         }
         
-        // Turn grid in multi-dimensional array for further processing.
-        var isASquare = isSquare(grid.length);
-        if (!isASquare) {
-            throw new Error("Invalid grid size supplied (needs to be a square): " + grid.length);
-        }
-        GRIDSIZE = Math.sqrt(grid.length);
-        var newGrid = [];
-        for (var y=0; y<GRIDSIZE; y++) {
-            var row = [];
-            for (var x=0; x<GRIDSIZE; x++) {
-                row.push(grid[y * GRIDSIZE + x]);
-            }
-            newGrid.push(row);
-        }
-        // console.log("new grid:", newGrid);
-        grid = newGrid;
-
-        // console.log("Implement core logic here.");
-        var cur = { 
-            x : 0,
-            y : 0,
-            node : trie.root,
-            grid : undefined,
-            str : ""
-        };
-
-        var blankGrid = [];
-        for (var y=0; y<GRIDSIZE; y++) {
-            var row = [];
-            for (var x=0; x<GRIDSIZE; x++) {
-                row.push(0);
-            }
-            blankGrid.push(row);
-        }
-        cur.grid = blankGrid;
+        grid = initGrid(grid);
+        var cur = getInitPos(trie);
 
         var q = new Queue();
         var words = [];
 
+        // Initial starting states - one for each square in the grid.
         for (var xSize = 0; xSize<GRIDSIZE; xSize++) {
             for (var ySize = 0; ySize<GRIDSIZE; ySize++) {
                 var newPos = copyObj(cur);
@@ -150,23 +156,18 @@ Cheat.prototype.process = function process(grid, cb) {
 };
 
 if (!module.parent) {
-    if (process.argv.length < 3 || !isSquare(process.argv.length - 2)) {
-        console.log("Usage: node cheat.js d a r e");
+    if (process.argv.length != 3 || !isSquare(process.argv[2].length)) {
+        console.log("Usage: node cheat.js abcdefghi");
+        console.log("The length of the puzzle string (abc.. in the above example) must be a perfect square.");
         process.exit();
     }
 
     var cheat = new Cheat();
-    // var args = Array.prototype.slice.call(arguments);
-    var args = process.argv;
-    args.splice(0, 2);
-    // console.log("args: ", args);
-    // console.log("isSquare: ", isSquare);
-    cheat.process(args, function(error, results) {
+    cheat.process(process.argv[2], function(error, results) {
         if (error) {
             throw error;
         }
-        
-        console.log("Here are the generated words:");
+        console.log("Here are the generated words (" + results.length + "):");
         for (var i=0, len=results.length; i<len; i++) {
             console.log("\t" + results[i]);
         }
