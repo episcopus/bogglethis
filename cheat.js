@@ -41,6 +41,7 @@ var values = {
     s : 1,
     t : 1,
     u : 2,
+    v : 5,
     w : 4,
     x : 8,
     y : 3,
@@ -145,7 +146,7 @@ Cheat.prototype.process = function process(grid, cb) {
         while (q.length() > 0) {
             cur = q.dequeue();
             // console.log("now looking at:", cur);
-            if (cur.node.getChild('\0') && cur.str.length > 2) {
+            if (cur.node.getChild('\0') && cur.str.length > 1) {
                 words.push( { word : cur.str, val : cur.val } );
             }
 
