@@ -1,6 +1,7 @@
 var path  = require('path');
 var Queue = require(path.resolve(__dirname, "queue.js"));
 var Trie  = require(path.resolve(__dirname, "trie.js"));
+var _     = require('underscore');
 
 var GRIDSIZE = 2;
 
@@ -125,7 +126,7 @@ Cheat.prototype.process = function process(grid, cb) {
         var cur = getInitPos(trie);
 
         var q = new Queue();
-        var words = [];
+        var words = {};
 
         // Initial starting states - one for each square in the grid.
         for (var xSize = 0; xSize<GRIDSIZE; xSize++) {
@@ -147,7 +148,7 @@ Cheat.prototype.process = function process(grid, cb) {
             cur = q.dequeue();
             // console.log("now looking at:", cur);
             if (cur.node.getChild('\0') && cur.str.length > 1) {
-                words.push( { word : cur.str, val : cur.val } );
+                words[cur.str] = { word : cur.str, val : cur.val };
             }
 
             for (var i=0, len=deltas.length; i<len; i++) {
@@ -180,7 +181,10 @@ Cheat.prototype.process = function process(grid, cb) {
                 // console.log("enqueuing this:", newOne);
             }
          }
-        
+
+        words = _(words).map(function(value) {
+            return value;
+        });
         words = words.sort(function(a, b) {
             return b.val - a.val;
         });
