@@ -1,5 +1,5 @@
-Scramble Solver
-===============
+Boggle This
+===========
 
 ### Usage
 
